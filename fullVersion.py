@@ -6,6 +6,7 @@ def talkToArduino(orig_col, orig_row, new_col, new_row, piece_type, capture):  #
     print("SaH duino")
 
 
+
 class Piece:
     def __init__(self, type, colour):
         self.type = type
