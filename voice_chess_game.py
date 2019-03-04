@@ -338,56 +338,60 @@ def check_path(piece, game, orig_col, orig_row, new_col, new_row, col_incremento
 # this allows the user to use both (this way I 
 # also don't have to change your regex code)
 def enchance_speech(move):
-    move.replace("alpha","a",1)
-    move.replace("Alpha","a",1)
+    move.capitalize()
+#    move.replace("a","alpha",1)
+    move.replace("a","Alpha",1)
 
-    move.replace("bravo","b",1)
+#    move.replace("bravo","b",1)
     move.replace("Bravo","b",1)
 
-    move.replace("charlie","c",1)
+#    move.replace("charlie","c",1)
     move.replace("Charlie","c",1)
 
-    move.replace("delta","d",1)
+#    move.replace("delta","d",1)
     move.replace("Delta","d",1)
 
-    move.replace("echo","e",1)
+#    move.replace("echo","e",1)
     move.replace("Echo","e",1)
 
-    move.replace("foxtrot","f",1)
+#    move.replace("foxtrot","f",1)
     move.replace("Foxtrot","f",1)
 
-    move.replace("golf","g",1)
+#    move.replace("golf","g",1)
     move.replace("Golf","g",1)
 
-    move.replace("hotel","h",1)
+#    move.replace("hotel","h",1)
     move.replace("Hotel","h",1)
 
+    move.replace(" ","")
+
     move.replace("One","h",1)
-    move.replace("one","h",1)
+#    move.replace("one","h",1)
 
-    move.replace("Two","h",2)
-    move.replace("two","h",2)
+    move.replace("Two","h",1)
+#    move.replace("two","h",1)
     
-    move.replace("Three","h",3)
-    move.replace("three","h",3)
+    move.replace("Three","h",1)
+#    move.replace("three","h",1)
 
-    move.replace("Four","h",4)
-    move.replace("four","h",4)
+    move.replace("Four","h",1)
+#    move.replace("four","h",1)
 
-    move.replace("Four","h",5)
-    move.replace("five","h",5)
+    move.replace("Four","h",1)
+#    move.replace("five","h",1)
 
-    move.replace("Four","h",6)
-    move.replace("six","h",6)
+    move.replace("Four","h")
+#    move.replace("six","h")
 
-    move.replace("Seven","h",7)
-    move.replace("seven","h",7)
+    move.replace("Seven","h")
+#    move.replace("seven","h")
 
-    move.replace("Eight","h",8)
-    move.replace("eight","h",8)
+    move.replace("Eight","h")
+#    move.replace("eight","h")
 
-    move.replace("Nine","h",9)
-    move.replace("nine","h",9)
+    move.replace("Nine","h")
+#    move.replace("nine","h")
+    return move
 
 def game_loop():
     play_again = "Y"
@@ -403,12 +407,14 @@ def game_loop():
                     print('Say your move')
                     audio = recorder.listen(source)
                     try:
+                        
                         move = format(recorder.recognize_google(audio))
-                        print(format(text))
+                        move = enchance_speech(move)
+                        print(move)
                     except:
                         print('Failed to recognize input')
                         move = 'ngkuygnku'
-                    enchance_speech(move)
+                    
                     orig_col, orig_row, new_col, new_row = translate_move(move)
 
                     if orig_col == -1 or orig_row == -1 or new_col == -1 or new_row == -1:
