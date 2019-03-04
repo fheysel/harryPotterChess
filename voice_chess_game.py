@@ -338,59 +338,48 @@ def check_path(piece, game, orig_col, orig_row, new_col, new_row, col_incremento
 # this allows the user to use both (this way I 
 # also don't have to change your regex code)
 def enchance_speech(move):
-    move.capitalize()
-#    move.replace("a","alpha",1)
-    move.replace("a","Alpha",1)
 
-#    move.replace("bravo","b",1)
-    move.replace("Bravo","b",1)
+    # capitalize everything
+    move = move.title()
 
-#    move.replace("charlie","c",1)
-    move.replace("Charlie","c",1)
+    move = move.replace("Alpha","a",2)
 
-#    move.replace("delta","d",1)
-    move.replace("Delta","d",1)
+    move = move.replace("Bravo","b",2)
 
-#    move.replace("echo","e",1)
-    move.replace("Echo","e",1)
+    move = move.replace("Charlie","c",2)
 
-#    move.replace("foxtrot","f",1)
-    move.replace("Foxtrot","f",1)
+    move = move.replace("Delta","d",2)
 
-#    move.replace("golf","g",1)
-    move.replace("Golf","g",1)
+    move = move.replace("Echo","e",2)
 
-#    move.replace("hotel","h",1)
-    move.replace("Hotel","h",1)
+    move = move.replace("Foxtrot","f",2)
 
-    move.replace(" ","")
+    move = move.replace("Golf","g",2)
 
-    move.replace("One","h",1)
-#    move.replace("one","h",1)
+    move = move.replace("Hotel","h",2)
 
-    move.replace("Two","h",1)
-#    move.replace("two","h",1)
-    
-    move.replace("Three","h",1)
-#    move.replace("three","h",1)
+    move = move.replace("One","1",2)
 
-    move.replace("Four","h",1)
-#    move.replace("four","h",1)
+    move = move.replace("Two","2",2)
+    move = move.replace("To","2",2)
 
-    move.replace("Four","h",1)
-#    move.replace("five","h",1)
+    move = move = move.replace("Three","3",2)
 
-    move.replace("Four","h")
-#    move.replace("six","h")
+    move = move.replace("Four","4",2)
 
-    move.replace("Seven","h")
-#    move.replace("seven","h")
+    move = move.replace("Five","5",2)
 
-    move.replace("Eight","h")
-#    move.replace("eight","h")
+    move = move.replace("Six","6",2)
 
-    move.replace("Nine","h")
-#    move.replace("nine","h")
+    move = move.replace("Seven","7",2)
+
+    move = move.replace("Eight","8",2)
+
+    move = move.replace("Nine","9",2)
+
+    move = move.replace(" ","")
+
+    move = move.replace("Take"," take ")
     return move
 
 def game_loop():
