@@ -1,10 +1,151 @@
 import re
+from nanpy import (ArduinoApi, Serialanager)
+from time import sleep
+
+currentX = 0
+currentY = 0
+
+
+def step(dir, dirPin, stepperPin, steps):
+    delayTime = 0.00008
+
+    duino.digitalWrite(dirPin, dir)
+    sleep(0.1)
+
+    for x in range(steps):
+        duino.digitalWrite(stepperPin, HIGH)
+        sleep(delayTime)
+        duino.digitalWrite(stepperPin, LOW)
+        sleep(delayTime)
+
+def stepDiagonally(dir1, dirPin1, stepperPin1, dir2, dirPin2, stepperPin2, steps):
+    delayTime = 0.00008
+
+    duino.digitalWrite(dirPin1, dir1)
+    duino.digitalWrite(dirPin2, dir2)
+    sleep(0.1)
+
+    for x in range(steps):
+        duino.digitalWrite(stepperPin1, HIGH)
+        duino.digitalWrite(stepperPin2, HIGH)
+        sleep(delayTime)
+        duino.digitalWrite(stepperPin1, LOW)
+        duino.digitalWrite(stepperPin2, LOW)
+        sleep(delayTime)
+
+def magnet(state):
+    step(state, Z_DIR_PIN, Z_STP_PIN, 6400*0.25) # move the z axis a quarter revolution to turn on or off
 
 
 def talkToArduino(orig_col, orig_row, new_col, new_row, piece_type, capture):  # need to tell arduino start position, end position, piece type and if it is a removal or not.
-    # send the info to the arduino.
-    print("SaH duino")
 
+    origCol = orig_col + 1 # converting the 10X10 grid
+    origRow = orig_row + 1
+    newCol = new_col + 1
+    newRow = new_row + 1
+
+    if capture is True:
+        moveArm(newCol, newRow, 0)
+        magnet(1) # magnet on
+        nearestWall = findNearestWall(newCol, newRow)
+        if nearestWall == 'bottom':
+            wallPosCol = newCol + x_offset
+            wallPosRow = 0
+            order = 0 # y first
+        elif nearestWall == 'top':
+            wallPosCol = newCol + x_offset
+            wallPosRow = 9
+            order = 0 # y first
+        elif nearestWall == 'left':
+            wallPosCol = 0
+            wallPosRow = newRow + y_offset
+            order = 1 # x first
+        else:
+            wallPosCol = 9
+            wallPosRow = newRow + y_offset
+            order = 1 # x first
+        moveArm(wallPosCol, wallPosRow, order)
+        magnet(0)
+    else:
+        moveArm(origCol, origRow, 0)
+        magnet(1)
+        if origCol != newCol and origRow != newRow and piece_type != "knight":
+            order = 2 # indicates diagonal movement of arm
+        elif piecetype == "knight":
+            order = 3 # indicates knight move
+        else:
+            order = 1 # order doesnt matter as there will only be movement in one arm. 1 was chosen arbritarily, could have been 0.
+
+        moveArm(newCol, newRow, order)
+        magnet(0)
+
+
+def moveArm(newCol, newRow, order):
+    tileStep = 4800 # steps per one tile
+
+    amountToMoveX = newRow - currentX
+    amountToMoveY = newCol - currentY
+
+    if amountToMoveX < 0 :
+        xDir = False # move x counter clockwise
+        amountToMoveX = abs(amountToMoveX)
+    else:
+        xDir = True
+    if amountToMoveY < 0 :
+        yDir = False # move y counter clockwise
+
+        amountToMoveY = abs(amountToMoveY)
+    else:
+        yDir = True
+
+    if order == 0 :
+        step(yDir, Y_DIR_PIN, Y_STP_PIN, amountToMoveY) # move y axis
+        step(xDir, X_DIR_PIN, X_STP_PIN, amountToMoveX)# move x axis
+    elif order == 1 :
+        step(xDir, X_DIR_PIN, X_STP_PIN, amountToMoveX)  # move x axis
+        step(yDir, Y_DIR_PIN, Y_STP_PIN, amountToMoveY)  # move y axis
+    elif order == 2 :
+        stepDiagonally(xDir, X_DIR_PIN, X_STP_PIN, yDir, Y_DIR_PIN, Y_STP_PIN, amountToMoveY)# move both at same time. amountToMoveY was used arbritatrily, could have been X
+    else :
+        if newRow > currentX: # knight moves up
+            yDir = True
+        else:
+            yDir = False
+        if newCol > currentY:  # knight moves left
+            xDir = True
+        else:
+            xDir = False
+
+        if abs(newRow - currentX) == 2:  # Long L shape
+            step(xDir, X_DIR_PIN, X_STP_PIN, 0.5*tileStep)# move half tile on x axis
+            step(yDir, Y_DIR_PIN, Y_STP_PIN, 2*tileStep) # move two tiles on y axia
+            step(xDir, X_DIR_PIN, X_STP_PIN, 0.5 * tileStep) # move half tile on x axis
+        else:
+            step(yDir, Y_DIR_PIN, Y_STP_PIN, 0.5 * tileStep) # move half tile on y axis
+            step(xDir, X_DIR_PIN, X_STP_PIN, 2 * tileStep) # move two tiles on x axis
+            step(yDir, Y_DIR_PIN, Y_STP_PIN, 0.5 * tileStep)  # move half tile on y axis
+
+
+
+def findNearestWall(newCol, newRow):
+    bottomDis = newRow;
+    leftDis = newCol;
+    rightDis = 7 - leftDis;
+    topDis = 7 - bottomDis;
+
+    shortestVertDis = min(bottomDis, topDis);
+    shortestHorDis = min(leftDis, rightDis);
+
+    shortestDis = min(shortestVertDis, shortestHorDis);
+
+    if (shortestDis == bottomDis):
+        return "bottom";
+    elif (shortestDis == topDis):
+        return "top"
+    elif (shortestDis == "leftDis"):
+        return "left"
+    else:
+        return "right"
 
 
 class Piece:
@@ -170,13 +311,10 @@ def translate_move(move):
 
 
 def check_move(orig_col, orig_row, new_col, new_row, game):
-    print("checking move")
-
     if orig_col<0 or orig_row<0 or new_col<0 or new_row<0 or orig_col>7 or orig_row>7 or new_col>7 or new_row>7:
         print("Invalid Move! Board location does not exist. Please repeat")
 
     piece = game.getitem(orig_col, orig_row)
-    print(piece.colour, piece.type)
 
     valid_move = False
     if piece.type == "pawn":
@@ -388,5 +526,40 @@ def game_loop():
         game.print_board()
 
 
-while True:
-    game_loop()
+#START WITH ARDUINO SETUP
+# set up setial connection
+EN = 8
+X_DIR_PIN = 5
+Y_DIR_PIN = 6
+Z_DIR_PIN = 7
+
+X_STP_PIN = 2
+Y_STP_PIN = 3
+Z_STP_PIN = 4
+
+delayTime = 30 #Delay between each pause (uS)
+stps = 6400 # steps in one revolution
+
+try:
+    connection = SerialManager()
+    duino = ArduinoApi(connection = connection)
+
+    #VOID SETUP
+    duino.pinMode(X_DIR_PIN, OUTPUT)
+    duino.pinMode(X_STP_PIN, OUTPUT)
+
+    duino.pinMode(Y_DIR_PIN, OUTPUT)
+    duino.pinMode(Y_STP_PIN, OUTPUT)
+
+    duino.pinMode(Z_DIR_PIN, OUTPUT)
+    duino.pinMode(Z_STP_PIN, OUTPUT)
+
+    duino.pinMode(EN, OUTPUT)
+    duino.digitalWrite(EN, LOW)
+
+
+    while True:
+        game_loop()
+
+except:
+    print("Connection to Arduino failed")
