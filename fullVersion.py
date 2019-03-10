@@ -1,5 +1,5 @@
 import re
-from nanpy import (ArduinoApi, Serialanager)
+from nanpy import (ArduinoApi, SerialManager)
 from time import sleep
 
 currentX = 0
