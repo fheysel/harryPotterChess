@@ -8,14 +8,16 @@ currentY = 0
 
 def step(dir, dirPin, stepperPin, steps):
     delayTime = 0.00008
+    if dirPin == 7: # set faster for z motion
+        delayTime = 0.00003
 
     duino.digitalWrite(dirPin, dir)
     sleep(0.1)
 
     for x in range(steps):
-        duino.digitalWrite(stepperPin, HIGH)
+        duino.digitalWrite(stepperPin, duino.HIGH)
         sleep(delayTime)
-        duino.digitalWrite(stepperPin, LOW)
+        duino.digitalWrite(stepperPin, duino.LOW)
         sleep(delayTime)
 
 def stepDiagonally(dir1, dirPin1, stepperPin1, dir2, dirPin2, stepperPin2, steps):
@@ -26,11 +28,11 @@ def stepDiagonally(dir1, dirPin1, stepperPin1, dir2, dirPin2, stepperPin2, steps
     sleep(0.1)
 
     for x in range(steps):
-        duino.digitalWrite(stepperPin1, HIGH)
-        duino.digitalWrite(stepperPin2, HIGH)
+        duino.digitalWrite(stepperPin1, duino.HIGH)
+        duino.digitalWrite(stepperPin2, duino.HIGH)
         sleep(delayTime)
-        duino.digitalWrite(stepperPin1, LOW)
-        duino.digitalWrite(stepperPin2, LOW)
+        duino.digitalWrite(stepperPin1, duino.LOW)
+        duino.digitalWrite(stepperPin2, duino.LOW)
         sleep(delayTime)
 
 def magnet(state):
@@ -545,17 +547,17 @@ try:
     duino = ArduinoApi(connection = connection)
 
     #VOID SETUP
-    duino.pinMode(X_DIR_PIN, OUTPUT)
-    duino.pinMode(X_STP_PIN, OUTPUT)
+    duino.pinMode(X_DIR_PIN, duino.OUTPUT)
+    duino.pinMode(X_STP_PIN, duino.OUTPUT)
 
-    duino.pinMode(Y_DIR_PIN, OUTPUT)
-    duino.pinMode(Y_STP_PIN, OUTPUT)
+    duino.pinMode(Y_DIR_PIN, duino.OUTPUT)
+    duino.pinMode(Y_STP_PIN, duino.OUTPUT)
 
-    duino.pinMode(Z_DIR_PIN, OUTPUT)
-    duino.pinMode(Z_STP_PIN, OUTPUT)
+    duino.pinMode(Z_DIR_PIN, duino.OUTPUT)
+    duino.pinMode(Z_STP_PIN, duino.OUTPUT)
 
-    duino.pinMode(EN, OUTPUT)
-    duino.digitalWrite(EN, LOW)
+    duino.pinMode(EN, duino.OUTPUT)
+    duino.digitalWrite(EN, duino.LOW)
 
 
     while True:
