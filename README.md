@@ -28,6 +28,15 @@ The final report and final video can be found as pdf / mp4 files titled "FINALCH
 
 ### The project was invited to go on display in the Queen's Creative Computing Showcase! Pictures of the event and prototyping can been seen below.
 ![file](https://user-images.githubusercontent.com/46120322/56382769-2acd9800-61e6-11e9-8619-bb381753125c.jpeg)
+
+### High Level System Schematic
+![system_schematic](https://user-images.githubusercontent.com/43456575/57669272-21560680-75bf-11e9-89cb-2f2752a425cb.PNG)
+
+### Arduino Schematic
+
+![arduino_schematic](https://user-images.githubusercontent.com/43456575/57669313-4cd8f100-75bf-11e9-8791-665a231910f0.PNG)
+
+### System Hardware 
 ![InkedInkedfile-1_LI](https://user-images.githubusercontent.com/46120322/56382771-2acd9800-61e6-11e9-9c17-49fe44e784c9.jpg)
 ![54257790_258083521734355_2430968063814795264_n](https://user-images.githubusercontent.com/46120322/56382766-2acd9800-61e6-11e9-8149-b27a0727d0b5.jpg)
 ![55604881_2297270103645971_6293497011408732160_n](https://user-images.githubusercontent.com/46120322/56382768-2acd9800-61e6-11e9-832a-651228b789bf.jpg)
