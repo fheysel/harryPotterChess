@@ -5,6 +5,7 @@ from time import sleep
 currentX = 0
 currentY = 0
 
+list[1, 2, 3]
 
 def step(dir, dirPin, stepperPin, steps):
     delayTime = 0.00008

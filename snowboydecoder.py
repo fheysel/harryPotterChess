@@ -17,6 +17,7 @@ RESOURCE_FILE = os.path.join(TOP_DIR, "resources/common.res")
 DETECT_DING = os.path.join(TOP_DIR, "resources/ding.wav")
 DETECT_DONG = os.path.join(TOP_DIR, "resources/dong.wav")
 
+n = 69
 
 class RingBuffer(object):
     """Ring buffer to hold audio from PortAudio"""
